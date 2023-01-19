@@ -14,7 +14,13 @@ async function checkUsername(username) {
         .count()
 }
 
+async function findBy(username) {
+    return db('users')
+        .where('username', username)
+}
+
 module.exports = {
     register,
-    checkUsername
+    checkUsername,
+    findBy
 }
