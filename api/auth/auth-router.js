@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs')
 const Auth = require('./auth-model')
+const { checkCredentials, checkUsername } = require('./auth-middleware')
 
-router.post('/register', (req, res) => {
+router.post('/register', checkCredentials, checkUsername, (req, res, next) => {
   const credentials = req.body;
   const hash = bcrypt.hashSync(credentials.password, 8);
   credentials.password = hash
@@ -10,9 +11,8 @@ router.post('/register', (req, res) => {
     .then(user => {
       res.status(201).json(user)
     })
-    .catch(err => {
-      res.status(500).json(err)
-    })
+    .catch(next)
+  
 
   /*
     IMPLEMENT
@@ -67,5 +67,13 @@ router.post('/login', (req, res) => {
       the response body should include a string exactly as follows: "invalid credentials".
   */
 });
+
+router.use((err, req, res, next) => { // eslint-disable-line
+  res.status(err.status || 500).json({
+    sageAdvice: 'Finding the real error is 90% of the bug fix',
+    message: err.message,
+    stack: err.stack,
+  })
+})
 
 module.exports = router;

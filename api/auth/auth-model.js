@@ -8,6 +8,13 @@ async function register(user) {
     
 }
 
+async function checkUsername(username) {
+    return await db('users')
+        .where('username', username)
+        .count()
+}
+
 module.exports = {
-    register
+    register,
+    checkUsername
 }
