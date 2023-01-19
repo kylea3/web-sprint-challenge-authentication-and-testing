@@ -11,7 +11,7 @@ router.post('/register', checkCredentials, checkUsername, (req, res, next) => {
   credentials.password = hash
   Auth.register(credentials)
     .then(user => {
-      res.status(201).json(user)
+      res.status(201).json(user[0])
     })
     .catch(next)
   
